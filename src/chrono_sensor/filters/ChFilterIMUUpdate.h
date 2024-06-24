@@ -57,6 +57,7 @@ class CH_SENSOR_API ChFilterAccelerometerUpdate : public ChFilter {
     std::shared_ptr<ChAccelerometerSensor> m_accSensor;
     std::shared_ptr<SensorHostAccelBuffer> m_bufferOut;  ///< For holding generated IMU data
     std::shared_ptr<ChNoiseModel> m_noise_model;         ///< The noise model for augmenting data
+
 };
 
 /// Class for generating IMU data

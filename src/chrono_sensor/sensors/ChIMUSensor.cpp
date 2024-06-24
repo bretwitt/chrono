@@ -29,13 +29,20 @@ CH_SENSOR_API ChAccelerometerSensor::ChAccelerometerSensor(std::shared_ptr<chron
                                                            std::shared_ptr<ChNoiseModel> noise_model)
     : ChDynamicSensor(parent, updateRate, offsetPose) {
     m_filters.push_front(chrono_types::make_shared<ChFilterAccelerometerUpdate>(noise_model));
+    m_updateRate = updateRate;
 }
 
 CH_SENSOR_API void ChAccelerometerSensor::PushKeyFrame() {
-    ChVector3d tran_acc_no_offset = m_parent->PointAccelerationLocalToParent(m_offsetPose.GetPos());
+    //ChVector3d tran_acc_no_offset = m_parent->PointAccelerationLocalToParent(m_offsetPose.GetPos());    
+    ChVector3d tran_acc_no_offset = (m_lastSpeed - m_parent->PointSpeedLocalToParent(m_offsetPose.GetPos()))/m_updateRate; // avoids using integrator acceleration directly
+    //tran_acc_no_offset = 0.5 * tran_acc_no_offset + (1.0 - 0.5 ) * m_lastAccel; // low pass filter
+    
     ChVector3d tran_acc_offset = -m_parent->GetSystem()->GetGravitationalAcceleration();
     tran_acc_offset = m_parent->GetRot().Rotate(tran_acc_offset);
     m_keyframes.push_back(tran_acc_no_offset + tran_acc_offset);
+    
+    m_lastSpeed = m_parent->PointSpeedLocalToParent(m_offsetPose.GetPos());
+    m_lastAccel = tran_acc_no_offset;
 }
 CH_SENSOR_API void ChAccelerometerSensor::ClearKeyFrames() {
     m_keyframes.clear();

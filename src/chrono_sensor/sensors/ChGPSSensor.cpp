@@ -32,7 +32,9 @@ CH_SENSOR_API ChGPSSensor::ChGPSSensor(std::shared_ptr<chrono::ChBody> parent,
 CH_SENSOR_API ChGPSSensor::~ChGPSSensor() {}
 
 CH_SENSOR_API void ChGPSSensor::PushKeyFrame() {
-    ChVector3d pos_data = m_parent->TransformPointLocalToParent(m_offsetPose.GetPos());
+    //ChVector3d pos_data = m_parent->TransformPointLocalToParent(m_offsetPose.GetPos());
+    ChVector3d pos_data = m_parent->GetPos();
+
     m_keyframes.push_back(std::make_tuple((float)m_parent->GetSystem()->GetChTime(), pos_data));
 }
 

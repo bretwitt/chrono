@@ -52,6 +52,9 @@ class CH_SENSOR_API ChAccelerometerSensor : public ChDynamicSensor {
 
   private:
     std::vector<ChVector3d> m_keyframes;  ///< stores keyframes for sensor
+    ChVector3d m_lastSpeed {0.,0.,0.}; //< 
+    ChVector3d m_lastAccel {0.,0.,0.};
+    float m_updateRate; //<dt
     friend class ChFilterAccelerometerUpdate;
 };
 /// Gyroscope class. The data is collected from the physical quantities
